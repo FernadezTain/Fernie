@@ -1,78 +1,34 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Игровой чат-бот FernieUIBot</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fernie Link Convertor</title>
   <style>
-    /* Общие стили */
     body {
+      background: linear-gradient(135deg, #1c1c1c, #2b2b2b);
+      color: #ffffff;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      height: 100%;
+      justify-content: center;
+      height: 100vh;
       margin: 0;
-      padding: 20px;
+      padding: 10px;
+      overflow: hidden;
       box-sizing: border-box;
-      overflow-y: auto;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    .dark-theme { background-color: #111; color: #fff; }
-    .light-theme { background-color: #fff; color: #111; }
-
-    /* Анимация появления */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    /* Кнопка смены темы */
-    #theme-toggle-btn {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: linear-gradient(45deg, #111, #fff, #111, #fff);
-      background-size: 400% 400%;
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      font-size: 1.3em;
-      font-weight: bold;
-      border-radius: 10px;
-      cursor: pointer;
-      animation: colorShift 5s linear infinite, fadeIn 1.5s ease 0.5s forwards;
-      opacity: 0;
-      transform: scale(0.8);
-      transition: box-shadow 0.4s ease, transform 0.2s, background 0.6s ease;
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.7);
-    }
-
-    #theme-toggle-btn:hover {
-      box-shadow: 0 0 35px rgba(0, 200, 255, 0.9);
-      transform: scale(1.05);
-    }
-
-    #theme-toggle-btn:active {
-      transform: scale(0.95);
-    }
-
-    @keyframes colorShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
     }
 
     h1 {
-      font-size: 3em;
+      font-size: 2.5em;
+      text-align: center;
       margin-bottom: 30px;
-      background: linear-gradient(45deg, #00f, #ff0080, #00ff00, #ffff00);
+      background: linear-gradient(-45deg, #00aaff, #ff0055, #00ff99, #ffcc00);
       background-size: 400% 400%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: shimmer 5s ease infinite, fadeInUp 2s ease forwards;
+      animation: shimmer 6s ease infinite;
     }
 
     @keyframes shimmer {
@@ -81,167 +37,152 @@
       100% { background-position: 0% 50%; }
     }
 
-    @keyframes fadeInUp {
-      0% { opacity: 0; transform: translateY(30px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    .content {
-      text-align: center;
-      max-width: 1000px;
-      width: 100%;
-      opacity: 0;
-      animation: fadeInUp 2s ease 1s forwards;
-    }
-
-    p {
-      font-size: 1.2em;
-      margin-bottom: 20px;
-      color: #bbb;
-      opacity: 0;
-      animation: fadeInUp 2s ease 1.5s forwards;
-    }
-
-    .faq {
-      font-size: 1.1em;
-      margin-top: 40px;
-      text-align: left;
-      background-color: rgba(0, 0, 0, 0.8);
-      padding: 20px;
-      border-radius: 8px;
-      opacity: 0;
-      animation: fadeInUp 2s ease 2s forwards;
-    }
-
-    .faq h2 { color: #00ff99; }
-    .faq ul { list-style-type: none; padding: 0; }
-    .faq li { margin: 10px 0; color: #bbb; }
-    .faq li:hover { color: #ff0080; }
-
-    .buttons-container {
-      display: flex;
-      gap: 50px;
-      justify-content: center;
-      margin-top: 30px;
-      opacity: 0;
-      animation: fadeInUp 2s ease 3.5s forwards;
-    }
-
-    #telegram-button, #toggle-commands {
-      background: linear-gradient(270deg, #00ff00, #ff0080, #ff00ff);
-      background-size: 400% 400%;
+    #link-button {
+      background-color: #007bff;
       color: white;
       border: none;
-      padding: 15px 30px;
-      font-size: 1.3em;
-      font-weight: bold;
-      border-radius: 10px;
-      cursor: pointer;
-      animation: buttonGlow 8s ease infinite, fadeInUp 2s ease 2.5s forwards;
-      transition: box-shadow 0.4s ease, transform 0.2s;
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.7);
-      margin-top: 20px;
-    }
-
-    #telegram-button:hover, #toggle-commands:hover {
-      box-shadow: 0 0 35px rgba(0, 200, 255, 0.9);
-      transform: scale(1.05);
-    }
-
-    #telegram-button:active, #toggle-commands:active {
-      transform: scale(0.95);
-    }
-
-    @keyframes buttonGlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .command-section {
-      margin-top: 40px;
-      padding: 20px;
-      background-color: rgba(0, 0, 0, 0.75);
-      border-radius: 10px;
-      opacity: 0;
-      transform: scale(0.8);
-      max-height: 0;
-      overflow-y: hidden;
-      transition: all 0.8s ease;
-    }
-
-    .command-section.visible {
-      opacity: 1;
-      transform: scale(1);
-      max-height: 1000px;
-      height: auto;
-      overflow-y: auto;
-    }
-
-    .command-section h3 { color: #00ff99; }
-    .command-section ul {
-      list-style-type: none;
-      padding: 0;
+      padding: 12px 25px;
       font-size: 1.1em;
-      color: #ccc;
+      border-radius: 8px;
+      cursor: not-allowed;
+      transition: background-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+      max-width: 90vw;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 170, 255, 0.6);
+      display: inline-block;
     }
 
-    .command-section li {
-      padding: 6px 0;
-      border-bottom: 1px solid #333;
+    #link-button.enabled {
+      cursor: pointer;
     }
 
-    .command-section li:hover { color: #ff0080; }
+    #link-button:not(:hover) {
+      background: linear-gradient(45deg, #00aaff, #00ff99);
+      animation: glowing 3s infinite;
+    }
+
+    #link-button:hover.enabled {
+      background: linear-gradient(45deg, #ff0033, #ff6600);
+      animation: glowingRed 2s infinite;
+    }
+
+    @keyframes glowing {
+      0% { box-shadow: 0 0 25px rgba(0, 170, 255, 0.8), 0 0 50px rgba(0, 170, 255, 0.6); }
+      50% { box-shadow: 0 0 35px rgba(0, 255, 150, 0.8), 0 0 70px rgba(0, 255, 150, 0.6); }
+      100% { box-shadow: 0 0 25px rgba(0, 170, 255, 0.8), 0 0 50px rgba(0, 170, 255, 0.6); }
+    }
+
+    @keyframes glowingRed {
+      0% { box-shadow: 0 0 25px rgba(255, 0, 51, 0.8), 0 0 50px rgba(255, 0, 51, 0.6); }
+      50% { box-shadow: 0 0 35px rgba(255, 102, 0, 0.8), 0 0 70px rgba(255, 102, 0, 0.6); }
+      100% { box-shadow: 0 0 25px rgba(255, 0, 51, 0.8), 0 0 50px rgba(255, 0, 51, 0.6); }
+    }
+
+    #progress-bar-container {
+      width: 80%;
+      height: 6px;
+      background-color: #333;
+      border-radius: 5px;
+      margin-top: 20px;
+      position: relative;
+      display: none;
+      box-shadow: 0 0 15px rgba(0, 170, 255, 0.8);
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 0;
+      background-color: #00aaff;
+      border-radius: 5px;
+      transition: width 1s ease, background-color 1s ease, box-shadow 1s ease;
+    }
+
+    #countdown {
+      margin-top: 15px;
+      font-size: 1em;
+      color: #aaa;
+      text-align: center;
+    }
+
+    .fade-out {
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
   </style>
 </head>
-<body class="dark-theme">
-  <button id="theme-toggle-btn" onclick="toggleTheme()">🌙 / 🌞</button>
-
-  <h1>Игровой чат-бот FernieUIBot</h1>
-  <div class="content">
-    <p>Этот бот поможет вам в игре, предоставляет все необходимые команды и поддержку в любое время!</p>
-    <p>Просто нажмите на кнопку ниже, чтобы перейти в наш телеграм-бот и начать использовать все его возможности.</p>
-
-    <div class="buttons-container">
-      <button id="telegram-button" onclick="window.location.href='https://t.me/FernieUIBot'">Перейти в бота</button>
-      <button id="toggle-commands" onclick="toggleCommands()">Список команд</button>
-    </div>
-
-    <div id="commands-list" class="command-section">
-      <h3>📜 Список команд:</h3>
-      <ul>
-        <li><strong>👤 Профиль и идентификация:</strong> /start, /menu, /cid, /me, /я, /кто я /тех</li>
-        <li><strong>🛠 Админ-панель / Разработка:</strong> /apanel, /ahelp, /alist, /warn, /spec, /cur, /owner, /владелец, /dev, /разраб, /teh, /astats, /th, /compensation, /eshop, /ebuy, /ehbuy, /eset</li>
-        <li><strong>💰 Финансы и бонусы:</strong> /pay, /ac, /aj, /bonus, /бонус, /payday, /пд, /promo, /pl, /hack, /aedit, /rti, /upd, /3bonus</li>
-        <li><strong>🏦 Бизнес:</strong> /bname, /bmy, /bshop, /bbuy, /bsell, /bcprofit, /bbonus, /bup</li>
-        <li><strong>🛍 Магазин / Экономика:</strong> /купить, /продать</li>
-        <li><strong>🚕 Такси:</strong> /taxi [Кнопки]: Выполнить заказ / Рейтинг</li>
-        <li><strong>🏕 Ферма, охота и казино:</strong> /farm, /ферма, /охота, /казино, /банк</li>
-        <li><strong>⚠ Модерация:</strong> /warn </li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="faq">
-    <h2>❓ Часто задаваемые вопросы</h2>
-    <ul>
-      <li><strong>Как переключить тему?</strong> Нажмите на кнопку с изображением 🌙 / 🌞 в верхнем левом углу.</li>
-      <li><strong>Какие команды доступны в боте?</strong> Список команд можно увидеть, нажав на кнопку "Список команд".</li>
-      <li><strong>Что такое система такси?</strong> Система такси позволяет зарабатывать монеты и очки, выполняя заказы как таксист.</li>
-      <li><strong>Как использовать магазин?</strong> В магазине можно покупать товары и предметы для улучшения своего профиля.</li>
-    </ul>
+<body>
+  <h1>Fernie Link Convertor</h1>
+  <button id="link-button" disabled>Посмотреть видео</button>
+  <div id="countdown">Ожидайте: 5 сек...</div>
+  <div id="progress-bar-container">
+    <div id="progress-bar"></div>
   </div>
 
   <script>
-    function toggleTheme() {
-      document.body.classList.toggle('dark-theme');
-      document.body.classList.toggle('light-theme');
+    const button = document.getElementById('link-button');
+    const progressBar = document.getElementById('progress-bar');
+    const countdownText = document.getElementById('countdown');
+    const progressBarContainer = document.getElementById('progress-bar-container');
+
+    let waitDelay = 5;
+    const waitInterval = setInterval(() => {
+      waitDelay--;
+      countdownText.textContent = `Ожидайте: ${waitDelay} сек...`;
+      if (waitDelay === 0) {
+        clearInterval(waitInterval);
+        countdownText.textContent = "Кнопка активна.";
+        button.disabled = false;
+        button.classList.add('enabled');
+        button.style.cursor = 'pointer';
+      }
+    }, 1000);
+
+    function updateProgressBar(progress) {
+      progressBar.style.width = progress + '%';
     }
 
-    function toggleCommands() {
-      const commands = document.getElementById('commands-list');
-      commands.classList.toggle('visible');
+    function updateProgressBarColor(progress) {
+      if (progress <= 25) {
+        progressBar.style.backgroundColor = '#00aaff';
+      } else if (progress <= 50) {
+        progressBar.style.backgroundColor = '#ff0033';
+      } else if (progress <= 75) {
+        progressBar.style.backgroundColor = '#00ff99';
+      } else {
+        progressBar.style.backgroundColor = '#ffcc00';
+      }
     }
+
+    button.addEventListener('click', () => {
+      if (!button.classList.contains('enabled')) return;
+
+      button.classList.add('fade-out');
+      countdownText.textContent = "Переход через 15 сек...";
+      progressBarContainer.style.display = 'block';
+
+      let loadDelay = 15;
+      let progress = 0;
+      const loadInterval = setInterval(() => {
+        loadDelay--;
+        progress = 100 - (loadDelay * 6.67);
+
+        updateProgressBar(progress);
+        updateProgressBarColor(progress);
+        countdownText.textContent = `Переход через ${loadDelay} сек...`;
+
+        if (loadDelay === 0) {
+          clearInterval(loadInterval);
+          setTimeout(() => {
+            countdownText.textContent = "Загружено. Переходим...";
+            setTimeout(() => {
+              window.location.href = 'https://rutube.ru/video/private/aefe79734c98051f0606d7a1738dc166/?p=IM2wUKVKxbsAy-hg7utRkA';
+            }, 2000);
+          }, 2000);
+        }
+      }, 1000);
+    });
   </script>
 </body>
 </html>
