@@ -37,7 +37,7 @@
       100% { background-position: 0% 50%; }
     }
 
-    #link-button, #subscribe-button {
+    #link-button {
       background-color: #007bff;
       color: white;
       border: none;
@@ -50,9 +50,10 @@
       position: relative;
       overflow: hidden;
       box-shadow: 0 0 20px rgba(0, 170, 255, 0.6);
+      display: inline-block;
     }
 
-    #link-button.enabled, #subscribe-button.enabled {
+    #link-button.enabled {
       cursor: pointer;
     }
 
@@ -61,33 +62,21 @@
       animation: glowing 3s infinite;
     }
 
-    #link-button:hover.enabled, #subscribe-button:hover.enabled {
+    #link-button:hover.enabled {
       background: linear-gradient(45deg, #ff0033, #ff6600);
       animation: glowingRed 2s infinite;
     }
 
     @keyframes glowing {
-      0% {
-        box-shadow: 0 0 25px rgba(0, 170, 255, 0.8), 0 0 50px rgba(0, 170, 255, 0.6);
-      }
-      50% {
-        box-shadow: 0 0 35px rgba(0, 255, 150, 0.8), 0 0 70px rgba(0, 255, 150, 0.6);
-      }
-      100% {
-        box-shadow: 0 0 25px rgba(0, 170, 255, 0.8), 0 0 50px rgba(0, 170, 255, 0.6);
-      }
+      0% { box-shadow: 0 0 25px rgba(0, 170, 255, 0.8), 0 0 50px rgba(0, 170, 255, 0.6); }
+      50% { box-shadow: 0 0 35px rgba(0, 255, 150, 0.8), 0 0 70px rgba(0, 255, 150, 0.6); }
+      100% { box-shadow: 0 0 25px rgba(0, 170, 255, 0.8), 0 0 50px rgba(0, 170, 255, 0.6); }
     }
 
     @keyframes glowingRed {
-      0% {
-        box-shadow: 0 0 25px rgba(255, 0, 51, 0.8), 0 0 50px rgba(255, 0, 51, 0.6);
-      }
-      50% {
-        box-shadow: 0 0 35px rgba(255, 102, 0, 0.8), 0 0 70px rgba(255, 102, 0, 0.6);
-      }
-      100% {
-        box-shadow: 0 0 25px rgba(255, 0, 51, 0.8), 0 0 50px rgba(255, 0, 51, 0.6);
-      }
+      0% { box-shadow: 0 0 25px rgba(255, 0, 51, 0.8), 0 0 50px rgba(255, 0, 51, 0.6); }
+      50% { box-shadow: 0 0 35px rgba(255, 102, 0, 0.8), 0 0 70px rgba(255, 102, 0, 0.6); }
+      100% { box-shadow: 0 0 25px rgba(255, 0, 51, 0.8), 0 0 50px rgba(255, 0, 51, 0.6); }
     }
 
     #progress-bar-container {
@@ -121,13 +110,11 @@
       transform: scale(0.95);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
-
   </style>
 </head>
 <body>
   <h1>Fernie Link Convertor</h1>
-  <button id="link-button" style="display: none;">Перейти по ссылке</button>
-  <button id="subscribe-button">Подписаться на канал</button>
+  <button id="link-button" disabled>Посмотреть видео</button>
   <div id="countdown">Ожидайте: 5 сек...</div>
   <div id="progress-bar-container">
     <div id="progress-bar"></div>
@@ -135,20 +122,20 @@
 
   <script>
     const button = document.getElementById('link-button');
-    const subscribeButton = document.getElementById('subscribe-button');
     const progressBar = document.getElementById('progress-bar');
     const countdownText = document.getElementById('countdown');
     const progressBarContainer = document.getElementById('progress-bar-container');
 
-    let startDelay = 5;
-    const startInterval = setInterval(() => {
-      startDelay--;
-      countdownText.textContent = `Ожидайте: ${startDelay} сек...`;
-      if (startDelay === 0) {
-        clearInterval(startInterval);
+    let waitDelay = 5;
+    const waitInterval = setInterval(() => {
+      waitDelay--;
+      countdownText.textContent = `Ожидайте: ${waitDelay} сек...`;
+      if (waitDelay === 0) {
+        clearInterval(waitInterval);
         countdownText.textContent = "Кнопка активна.";
-        subscribeButton.disabled = false;
-        subscribeButton.classList.add('enabled');
+        button.disabled = false;
+        button.classList.add('enabled');
+        button.style.cursor = 'pointer';
       }
     }, 1000);
 
@@ -158,35 +145,15 @@
 
     function updateProgressBarColor(progress) {
       if (progress <= 25) {
-        progressBar.style.backgroundColor = '#00aaff';  // Синий
+        progressBar.style.backgroundColor = '#00aaff';
       } else if (progress <= 50) {
-        progressBar.style.backgroundColor = '#ff0033';  // Красный
+        progressBar.style.backgroundColor = '#ff0033';
       } else if (progress <= 75) {
-        progressBar.style.backgroundColor = '#00ff99';  // Зеленый
+        progressBar.style.backgroundColor = '#00ff99';
       } else {
-        progressBar.style.backgroundColor = '#ffcc00';  // Оранжевый
+        progressBar.style.backgroundColor = '#ffcc00';
       }
     }
-
-    // Показываем кнопку "Подписаться на канал" через 5 секунд
-    setTimeout(() => {
-      subscribeButton.style.display = 'inline-block';
-    }, 5000);
-
-    // Обработка клика по кнопке подписки
-    subscribeButton.addEventListener('click', () => {
-      window.open('https://t.me/FernadezMMS', '_blank'); // Открываем канал
-      subscribeButton.disabled = true;
-      subscribeButton.style.display = 'none';
-      
-      // Показываем кнопку "Перейти по ссылке" только после подписки
-      setTimeout(() => {
-        button.style.display = 'inline-block';
-        button.disabled = false;
-        button.classList.add('enabled');
-        button.style.cursor = 'pointer';
-      }, 1000); // Пауза перед появлением кнопки
-    });
 
     button.addEventListener('click', () => {
       if (!button.classList.contains('enabled')) return;
@@ -199,7 +166,7 @@
       let progress = 0;
       const loadInterval = setInterval(() => {
         loadDelay--;
-        progress = 100 - (loadDelay * 6.67);  // Прогресс-бар заполняется постепенно
+        progress = 100 - (loadDelay * 6.67);
 
         updateProgressBar(progress);
         updateProgressBarColor(progress);
@@ -210,9 +177,9 @@
           setTimeout(() => {
             countdownText.textContent = "Загружено. Переходим...";
             setTimeout(() => {
-              window.location.href = 'https://forms.yandex.ru/u/68160605d046881c6d7479a4/';
-            }, 2000); // Задержка перед переходом
-          }, 2000); // Задержка перед текстом
+              window.location.href = 'https://rutube.ru/video/private/aefe79734c98051f0606d7a1738dc166/?p=IM2wUKVKxbsAy-hg7utRkA';
+            }, 2000);
+          }, 2000);
         }
       }, 1000);
     });
