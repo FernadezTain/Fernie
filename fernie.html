@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fernie Link Convertor</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #1c1c1c, #2b2b2b);
+      color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 10px;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      text-align: center;
+      margin-bottom: 30px;
+      background: linear-gradient(-45deg, #00aaff, #ff0055, #00ff99, #ffcc00);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 6s ease infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #link-button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1.1em;
+      border-radius: 8px;
+      cursor: not-allowed;
+      transition: background-color 0.4s ease, transform 0.4s ease;
+      max-width: 90vw;
+    }
+
+    #link-button.enabled {
+      cursor: pointer;
+    }
+
+    #link-button:hover.enabled {
+      background-color: #ff0033;
+      transform: scale(1.05);
+    }
+
+    #loader {
+      display: none;
+      margin-top: 20px;
+      width: 50px;
+      height: 50px;
+      border: 5px solid #ccc;
+      border-top-color: #ff0033;
+      border-radius: 50%;
+      animation: spin 1s linear infinite, pulseBorder 2s infinite alternate;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes pulseBorder {
+      0% { border-top-color: #ff0033; }
+      100% { border-top-color: #00aaff; }
+    }
+
+    #countdown {
+      margin-top: 15px;
+      font-size: 1em;
+      color: #aaa;
+      text-align: center;
+    }
+
+    .fade-out {
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fernie Link Convertor</h1>
+  <button id="link-button">Перейти по ссылке</button>
+  <div id="countdown">Ожидайте: 5 сек...</div>
+  <div id="loader"></div>
+
+  <script>
+    const button = document.getElementById('link-button');
+    const loader = document.getElementById('loader');
+    const countdownText = document.getElementById('countdown');
+
+    // Ожидание перед активацией кнопки
+    let startDelay = 5;
+    const startInterval = setInterval(() => {
+      startDelay--;
+      countdownText.textContent = `Ожидайте: ${startDelay} сек...`;
+      if (startDelay === 0) {
+        clearInterval(startInterval);
+        countdownText.textContent = "Кнопка активна.";
+        button.disabled = false;
+        button.classList.add('enabled');
+        button.style.cursor = 'pointer';
+      }
+    }, 1000);
+
+    // Обработка клика по кнопке
+    button.addEventListener('click', () => {
+      if (!button.classList.contains('enabled')) return;
+
+      button.classList.add('fade-out');
+      countdownText.textContent = "Переход через 15 сек...";
+
+      setTimeout(() => {
+        button.style.display = 'none';
+        loader.style.display = 'block';
+
+        let loadDelay = 15;
+        const loadInterval = setInterval(() => {
+          loadDelay--;
+          countdownText.textContent = `Переход через ${loadDelay} сек...`;
+          if (loadDelay === 0) {
+            clearInterval(loadInterval);
+            window.location.href = 'https://t.me/PostBot';
+          }
+        }, 1000);
+      }, 600);
+    });
+  </script>
+</body>
+</html>
