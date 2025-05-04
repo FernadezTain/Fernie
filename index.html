@@ -37,7 +37,7 @@
       100% { background-position: 0% 50%; }
     }
 
-    #link-button {
+    #link-button, #subscribe-button {
       background-color: #007bff;
       color: white;
       border: none;
@@ -52,7 +52,7 @@
       box-shadow: 0 0 20px rgba(0, 170, 255, 0.6);
     }
 
-    #link-button.enabled {
+    #link-button.enabled, #subscribe-button.enabled {
       cursor: pointer;
     }
 
@@ -61,7 +61,7 @@
       animation: glowing 3s infinite;
     }
 
-    #link-button:hover.enabled {
+    #link-button:hover.enabled, #subscribe-button:hover.enabled {
       background: linear-gradient(45deg, #ff0033, #ff6600);
       animation: glowingRed 2s infinite;
     }
@@ -121,11 +121,13 @@
       transform: scale(0.95);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
+
   </style>
 </head>
 <body>
   <h1>Fernie Link Convertor</h1>
-  <button id="link-button">Перейти по ссылке</button>
+  <button id="link-button" style="display: none;">Перейти по ссылке</button>
+  <button id="subscribe-button">Подписаться на канал</button>
   <div id="countdown">Ожидайте: 5 сек...</div>
   <div id="progress-bar-container">
     <div id="progress-bar"></div>
@@ -133,11 +135,11 @@
 
   <script>
     const button = document.getElementById('link-button');
+    const subscribeButton = document.getElementById('subscribe-button');
     const progressBar = document.getElementById('progress-bar');
     const countdownText = document.getElementById('countdown');
     const progressBarContainer = document.getElementById('progress-bar-container');
 
-    // Ожидание перед активацией кнопки
     let startDelay = 5;
     const startInterval = setInterval(() => {
       startDelay--;
@@ -145,18 +147,15 @@
       if (startDelay === 0) {
         clearInterval(startInterval);
         countdownText.textContent = "Кнопка активна.";
-        button.disabled = false;
-        button.classList.add('enabled');
-        button.style.cursor = 'pointer';
+        subscribeButton.disabled = false;
+        subscribeButton.classList.add('enabled');
       }
     }, 1000);
 
-    // Функция для обновления прогресс-бара
     function updateProgressBar(progress) {
       progressBar.style.width = progress + '%';
     }
 
-    // Функция для обновления цвета прогресс-бара
     function updateProgressBarColor(progress) {
       if (progress <= 25) {
         progressBar.style.backgroundColor = '#00aaff';  // Синий
@@ -169,7 +168,26 @@
       }
     }
 
-    // Обработка клика по кнопке
+    // Показываем кнопку "Подписаться на канал" через 5 секунд
+    setTimeout(() => {
+      subscribeButton.style.display = 'inline-block';
+    }, 5000);
+
+    // Обработка клика по кнопке подписки
+    subscribeButton.addEventListener('click', () => {
+      window.open('https://t.me/FernadezMMS', '_blank'); // Открываем канал
+      subscribeButton.disabled = true;
+      subscribeButton.style.display = 'none';
+      
+      // Показываем кнопку "Перейти по ссылке" только после подписки
+      setTimeout(() => {
+        button.style.display = 'inline-block';
+        button.disabled = false;
+        button.classList.add('enabled');
+        button.style.cursor = 'pointer';
+      }, 1000); // Пауза перед появлением кнопки
+    });
+
     button.addEventListener('click', () => {
       if (!button.classList.contains('enabled')) return;
 
@@ -189,11 +207,10 @@
 
         if (loadDelay === 0) {
           clearInterval(loadInterval);
-          // Задержка после заполнения прогресса
           setTimeout(() => {
             countdownText.textContent = "Загружено. Переходим...";
             setTimeout(() => {
-              window.location.href = 'https://t.me/PostBot';
+              window.location.href = 'https://t.me/FernadezMMS';
             }, 2000); // Задержка перед переходом
           }, 2000); // Задержка перед текстом
         }
